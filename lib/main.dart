@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rider_app/constants/constants.dart';
+import 'package:rider_app/screens/login_screen.dart';
 import 'package:rider_app/screens/main_screen.dart';
+import 'package:rider_app/screens/registration_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,8 +21,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MainScreen(),
       debugShowCheckedModeBanner: false,
+      initialRoute: loginScreenRoute,
+      routes: {
+        loginScreenRoute: (context) => LoginScreen(),
+        registerScreenRoute: (context) => RegistrationScreen(),
+      },
     );
   }
 }
