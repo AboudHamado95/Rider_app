@@ -141,7 +141,7 @@ class RegistrationScreen extends StatelessWidget {
                                 state: ToastStates.ERROR);
                           } else if (passwordController.text.length < 6) {
                             showToast(
-                                message: 'name must be at least 6 characters.',
+                                message: 'Password must be at least 6 characters.',
                                 state: ToastStates.ERROR);
                           } else {
                             registerNewUser(context);

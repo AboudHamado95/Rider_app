@@ -1,9 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rider_app/components/components.dart';
 import 'package:rider_app/constants/constants.dart';
+import 'package:rider_app/main.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  final firebaseAuth = FirebaseAuth.instance;
+  loginUser(context) async {
+    await firebaseAuth
+        .signInWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((value) {
+      userRef.child(value.user!.uid).once().then((data) {
+        if (data.snapshot.value != null) {
+          showToast(
+              message: 'you are logged-in now', state: ToastStates.SUCCESS);
+          navigateAndFinish(context, homeRoute);
+        } else {
+          firebaseAuth.signOut();
+          showToast(
+              message:
+                  'No record exists for this user. Please create new account.',
+              state: ToastStates.ERROR);
+        }
+      });
+    }).catchError((error) {
+      showToast(message: error.toString(), state: ToastStates.ERROR);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +63,7 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: 1.0),
                     TextFormField(
+                      controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         labelText: 'Email',
@@ -50,6 +79,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 1.0),
                     TextFormField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelText: 'Password',
@@ -65,7 +95,20 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10.0),
                     MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (!emailController.text.contains('@')) {
+                          showToast(
+                              message: 'Email address is not valid.',
+                              state: ToastStates.ERROR);
+                        } else if (passwordController.text.length < 6) {
+                          showToast(
+                              message:
+                                  'Password must be at least 6 characters.',
+                              state: ToastStates.ERROR);
+                        } else {
+                          loginUser(context);
+                        }
+                      },
                       child: const SizedBox(
                         height: 50.0,
                         child: Center(
@@ -88,11 +131,12 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => navigateAndFinish(context, registerScreenRoute),
-                child:RichText(
-                  text:  TextSpan(
+                onPressed: () =>
+                    navigateAndFinish(context, registerScreenRoute),
+                child: RichText(
+                  text: TextSpan(
                     text: 'Do not have an Account? ',
-                    style:const TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                     children: [
                       TextSpan(
                         text: 'Register',
