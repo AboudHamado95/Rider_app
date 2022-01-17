@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rider_app/components/components.dart';
 import 'package:rider_app/constants/constants.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -87,11 +88,18 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context, registerScreenRoute, (route) => false),
-                child: const Text(
-                  'Do not have an Account? Register',
-                  style: TextStyle(color: Colors.black),
+                onPressed: () => navigateAndFinish(context, registerScreenRoute),
+                child:RichText(
+                  text:  TextSpan(
+                    text: 'Do not have an Account? ',
+                    style:const TextStyle(color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: 'Register',
+                        style: TextStyle(color: Colors.yellow[500]),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],
