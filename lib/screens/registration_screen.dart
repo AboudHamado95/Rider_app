@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rider_app/components/components.dart';
 import 'package:rider_app/constants/constants.dart';
 import 'package:rider_app/main.dart';
+import 'package:rider_app/widgets/show_dialog.dart';
 
 class RegistrationScreen extends StatelessWidget {
   RegistrationScreen({Key? key}) : super(key: key);
@@ -12,6 +13,13 @@ class RegistrationScreen extends StatelessWidget {
   TextEditingController phoneController = TextEditingController();
   final firebaseAuth = FirebaseAuth.instance;
   registerNewUser(context) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const ProgressDialog(
+              message: 'Authenticating, Please wait...');
+        });
     await firebaseAuth
         .createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
@@ -28,6 +36,7 @@ class RegistrationScreen extends StatelessWidget {
       navigateAndFinish(context, homeRoute);
     }).catchError((error) {
       showToast(message: error.toString(), state: ToastStates.ERROR);
+      Navigator.of(context).pop();
     });
   }
 
@@ -141,7 +150,8 @@ class RegistrationScreen extends StatelessWidget {
                                 state: ToastStates.ERROR);
                           } else if (passwordController.text.length < 6) {
                             showToast(
-                                message: 'Password must be at least 6 characters.',
+                                message:
+                                    'Password must be at least 6 characters.',
                                 state: ToastStates.ERROR);
                           } else {
                             registerNewUser(context);

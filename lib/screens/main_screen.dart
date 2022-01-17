@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rider_app/widgets/show_dialog.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class MainScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Rider App'),
       ),
-      body: Container(),
+      body: Container()
     );
   }
 }

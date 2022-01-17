@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rider_app/components/components.dart';
 import 'package:rider_app/constants/constants.dart';
 import 'package:rider_app/main.dart';
+import 'package:rider_app/widgets/show_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -11,6 +12,13 @@ class LoginScreen extends StatelessWidget {
 
   final firebaseAuth = FirebaseAuth.instance;
   loginUser(context) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const ProgressDialog(
+              message: 'Authenticating, Please wait...');
+        });
     await firebaseAuth
         .signInWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
@@ -26,9 +34,11 @@ class LoginScreen extends StatelessWidget {
               message:
                   'No record exists for this user. Please create new account.',
               state: ToastStates.ERROR);
+          Navigator.of(context).pop();
         }
       });
     }).catchError((error) {
+      Navigator.of(context).pop();
       showToast(message: error.toString(), state: ToastStates.ERROR);
     });
   }
